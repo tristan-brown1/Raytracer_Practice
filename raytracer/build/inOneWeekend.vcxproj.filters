@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\trist\Desktop\cs455\raytracer\main.cc">
+    <ClCompile Include="C:\Users\trist\Documents\GitHub\Raytracer_Practice\raytracer\main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\trist\Desktop\cs455\raytracer\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\trist\Documents\GitHub\Raytracer_Practice\raytracer\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{00267C18-E8FB-306E-9123-4B4D4DAA7E97}</UniqueIdentifier>
+      <UniqueIdentifier>{E12EE19D-0ACF-3AFB-9AC3-75972F7E4EB2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
