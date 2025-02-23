@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "hittable_h": "cpp",
+        "memory": "cpp",
+        "limits": "cpp"
+    }
+}
