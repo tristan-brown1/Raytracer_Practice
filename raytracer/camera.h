@@ -83,13 +83,14 @@ class camera {
                 vec3 L = vec3(1, 1, 1);  // light color
                 vec3 V = unit_vector(-r.direction()); // view direction
         
-                // Material properties
-                color Od = color(1, 0, 1);  // diffuse color 
-                color Os = color(1, 1, 1);      // specular color 
-                double Kd = 0.7;
-                double Ks = 0.2;
-                double Ka = 0.1;                // ambient coefficient
-                double Kgls = 16.0;             // shininess exponent
+                // material properties
+                 
+                double Kd = 0.7;                    // diffuse coefficient
+                double Ks = 0.2;                    // specular coefficient
+                double Ka = 0.1;                    // ambient coefficient
+                color Od = color(1.0, 0.0, 1.0);    // diffuse color
+                color Os = color(1.0, 1.0, 1.0);    // specular color 
+                double Kgls = 16.0;                 // shininess exponent
         
                 // ambient component
                 color I_a = color(0, 0, 0) * Ka * Od;
