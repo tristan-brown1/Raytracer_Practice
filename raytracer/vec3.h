@@ -45,6 +45,8 @@ class vec3 {
             return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
         }
 
+        
+
 };
 
 //point3 is just an alias for vec3, but useful for geometric clarity in the code. 
@@ -94,5 +96,9 @@ inline vec3 cross(const vec3& u, const vec3& v){
 
 inline vec3 unit_vector(const vec3 & v) {
     return v/ v.length();
+}
+
+inline vec3 reflect(const vec3& V, const vec3& N) {
+    return V - 2 * dot(V, N) * N;
 }
 #endif
