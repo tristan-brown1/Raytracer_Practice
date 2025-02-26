@@ -2,16 +2,21 @@
 #define CAMERA_H
 
 #include "hittable.h"
+#include "rtweekend.h"
 
 class camera {
 
     public:
         double aspect_ratio = 1.0;
         int image_width = 100;
+
+        /* for some reason my output looks just a little 
+            further away unless i change lookfrom to 0.5 in z*/
         point3 lookfrom = point3(0, 0, 1);
+
+
         point3 lookat = point3(0, 0, 0); 
         vec3 lookup = vec3(0, 1, 0); 
-
 
         void render(const hittable& world){
             initialize();
@@ -61,7 +66,6 @@ class camera {
             vec3 viewport_u = viewport_width * u;
             vec3 viewport_v = viewport_height * -v;  
     
-
             pixel_delta_u = viewport_u / image_width;
             pixel_delta_v = viewport_v / image_height;
     
@@ -75,32 +79,27 @@ class camera {
             hit_record rec;
         
             if (world.hit(r, interval(0, infinity), rec)) {
-                // surface normal at the hit point
-                vec3 N = unit_vector(rec.normal);
-                
-                // light properties
-                vec3 L_dir = unit_vector(vec3(0, 1, 0)); // directional light
-                vec3 L = vec3(1, 1, 1);  // light color
-                vec3 V = unit_vector(-r.direction()); // view direction
+                vec3 N = unit_vector(rec.normal);        // surface normal at the hit
+                vec3 L_dir = unit_vector(vec3(1, 1, 1)); // light direction
+                vec3 L = vec3(1, 1, 1);                  // light color
+                vec3 V = unit_vector(-r.direction());    // view direction
         
-                // material properties
-                 
-                double Kd = 0.7;                    // diffuse coefficient
-                double Ks = 0.2;                    // specular coefficient
-                double Ka = 0.1;                    // ambient coefficient
-                color Od = color(1.0, 0.0, 1.0);    // diffuse color
-                color Os = color(1.0, 1.0, 1.0);    // specular color 
-                double Kgls = 16.0;                 // shininess exponent
-        
+                color Od = rec.mat->Od;
+                color Os = rec.mat->Os;
+                double Kd = rec.mat->Kd;
+                double Ks = rec.mat->Ks;
+                double Ka = rec.mat->Ka;
+                double Kgls = rec.mat->Kgls;
+
                 // ambient component
-                color I_a = color(0, 0, 0) * Ka * Od;
+                color I_a = color(0.2, 0.2, 0.2) * Ka * Od;
         
                 // diffuse component
                 double diff_intensity = std::max(0.0, dot(N, L_dir));
                 color I_d = Kd * L * Od * diff_intensity;
         
                 // specular component
-                vec3 R = reflect(-L_dir, N); // reflection direction
+                vec3 R = reflect(-L_dir, N);
                 double spec_intensity = pow(std::max(0.0, dot(R, V)), Kgls);
                 color I_s = Ks * L * Os * spec_intensity;
         
@@ -110,7 +109,6 @@ class camera {
         
             // background color
 
-            
             // special sky gradiant that looks nice 
             // vec3 unit_direction = unit_vector(r.direction());
             // auto a = 0.5 * (unit_direction.y() + 1.0);
@@ -119,6 +117,7 @@ class camera {
             //testcase grey
             return color(0.2, 0.2, 0.2);
         }
+        
         
 
 };
