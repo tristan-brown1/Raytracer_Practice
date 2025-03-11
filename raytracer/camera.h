@@ -94,6 +94,7 @@ class camera {
                 // ambient component
                 color I_a = color(0.2, 0.2, 0.2) * Ka * Od;
         
+                
                 // diffuse component
                 double diff_intensity = std::max(0.0, dot(N, L_dir));
                 color I_d = Kd * L * Od * diff_intensity;
