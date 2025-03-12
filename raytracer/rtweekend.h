@@ -21,5 +21,9 @@ inline double degrees_to_radians(double degrees) {
 #include "ray.h"
 #include "vec3.h"
 #include "material.h"
+#include "sphere.h"
+#include "polygon.h"
+#include "hittable.h"
+#include "hittable_list.h"
 
 #endif

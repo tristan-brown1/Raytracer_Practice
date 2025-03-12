@@ -1,12 +1,6 @@
 #include "rtweekend.h"
 
 #include "camera.h"
-#include "hittable.h"
-#include "hittable_list.h"
-#include "sphere.h"
-#include "quad.h"
-
-
 
 
 int main() {
@@ -40,9 +34,13 @@ int main() {
 
     //blue material
     std::shared_ptr<material> blue_material = std::make_shared<material>(
-        color(0.0, 0.0, 1.0), color(1.0, 1.0, 1.0), 0.9, 0.0, 0.1, 16.0
+        color(0.0, 0.0, 1.0), color(1.0, 1.0, 1.0), 0.9, 1.0, 0.1, 4.0
     );
 
+    //yellow material
+    std::shared_ptr<material> yellow_material = std::make_shared<material>(
+        color(1.0, 1.0, 0.0), color(1.0, 1.0, 1.0), 0.9, 1.0, 0.1, 4.0
+    );
 
     //SPHERES
     //spheres get added by inputing their center point, radius, and assigning them a material
@@ -86,11 +84,27 @@ int main() {
     // world.add(std::make_shared<sphere>(point3(0.15, -0.21, 0.38), 0.05, white_material));
 
 
-    world.add(std::make_shared<quad>(point3(0, -1, -2), vec3(0, 0,-4), vec3(0, 4, 0), white_material));
+    world.add(std::make_shared<sphere>(point3(0.0, 0.3, -1.0), 0.25, white_material));
 
+    //POLYGONS
+    std::vector<point3> triangle1 = {
+        point3(0.0, -0.7, -0.5),
+        point3(1.0, 0.4, -1.0),
+        point3(0.0, -0.7, -1.5)
+    };
+    world.add(std::make_shared<polygon>(triangle1, blue_material));
+
+    std::vector<point3> triangle2 = {
+        point3(0.0, -0.7, -0.5),
+        point3(0.0, -0.7, -1.5),
+        point3(-1.0, 0.4, -1.0)
+    };
+    world.add(std::make_shared<polygon>(triangle2, yellow_material));
+
+    vec3 L_dir = unit_vector(vec3(1.0, 1.0, 0.0));
     camera cam;
     cam.aspect_ratio = 1;
     cam.image_width = 400;
-    cam.render(world);
+    cam.render(world, L_dir);
 
 }

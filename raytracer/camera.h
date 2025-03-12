@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "hittable.h"
+//#include "hittable.h"
 #include "rtweekend.h"
 
 class camera {
@@ -18,7 +18,7 @@ class camera {
         point3 lookat = point3(0, 0, 0); 
         vec3 lookup = vec3(0, 1, 0); 
 
-        void render(const hittable& world){
+        void render(const hittable& world, const vec3& L_dir){
             initialize();
 
             std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -31,7 +31,7 @@ class camera {
                     auto ray_direction = pixel_center - lookfrom;
                     ray r(lookfrom, ray_direction);
 
-                    color pixel_color = ray_color(r, world);
+                    color pixel_color = ray_color(r, world, L_dir);
 
                     write_color(std::cout, pixel_color);
                 }
@@ -75,12 +75,15 @@ class camera {
 
         
     
-        color ray_color(const ray& r, const hittable& world) const {
+        color ray_color(const ray& r, const hittable& world, const vec3& L_dir) const {
             hit_record rec;
         
             if (world.hit(r, interval(0, infinity), rec)) {
+
+                
+
                 vec3 N = unit_vector(rec.normal);        // surface normal at the hit
-                vec3 L_dir = unit_vector(vec3(1, 1, 1)); // light direction
+                //vec3 L_dir = unit_vector(vec3(1, 1, 1)); // light direction
                 vec3 L = vec3(1, 1, 1);                  // light color
                 vec3 V = unit_vector(-r.direction());    // view direction
         
@@ -94,7 +97,9 @@ class camera {
                 // ambient component
                 color I_a = color(0.2, 0.2, 0.2) * Ka * Od;
         
-                
+                if(world.is_in_shadow(rec.p, L_dir, world)){
+                    return I_a;
+                }
                 // diffuse component
                 double diff_intensity = std::max(0.0, dot(N, L_dir));
                 color I_d = Kd * L * Od * diff_intensity;
