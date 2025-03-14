@@ -11,9 +11,10 @@ class material {
         double Ks; // specular coefficient
         double Ka; // ambient coefficient
         double Kgls; // phong exponent
+        double refl; // reflectivity
         
-        material(const color& Od_, const color& Os_, double Kd_, double Ks_, double Ka_, double Kgls_)
-            : Od(Od_), Os(Os_), Kd(Kd_), Ks(Ks_), Ka(Ka_), Kgls(Kgls_) {}
+        material(const color& Od_, const color& Os_, double Kd_, double Ks_, double Ka_, double Kgls_, double refl_)
+            : Od(Od_), Os(Os_), Kd(Kd_), Ks(Ks_), Ka(Ka_), Kgls(Kgls_) , refl(refl_) {}
 };
 
 

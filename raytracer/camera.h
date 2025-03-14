@@ -31,7 +31,7 @@ class camera {
                     auto ray_direction = pixel_center - lookfrom;
                     ray r(lookfrom, ray_direction);
 
-                    color pixel_color = ray_color(r, world, L_dir);
+                    color pixel_color = ray_color(r, world, L_dir, 5);
 
                     write_color(std::cout, pixel_color);
                 }
@@ -75,9 +75,14 @@ class camera {
 
         
     
-        color ray_color(const ray& r, const hittable& world, const vec3& L_dir) const {
+        color ray_color(const ray& r, const hittable& world, const vec3& L_dir, int depth){
             hit_record rec;
         
+            if(depth <= 0){
+                return color(0,0,0);
+            }
+
+
             if (world.hit(r, interval(0, infinity), rec)) {
 
                 
@@ -93,35 +98,53 @@ class camera {
                 double Ks = rec.mat->Ks;
                 double Ka = rec.mat->Ka;
                 double Kgls = rec.mat->Kgls;
+                double refl = rec.mat->refl;
 
                 // ambient component
-                color I_a = color(0.2, 0.2, 0.2) * Ka * Od;
+                color I_a = color(0.1, 0.1, 0.1) * Ka * Od;
+
+                color I_d = color(0, 0, 0);
+                color I_s = color(0, 0, 0);
+
+                
         
-                if(world.is_in_shadow(rec.p, L_dir, world)){
-                    return I_a;
+                if(!world.is_in_shadow(rec.p, L_dir, world)){
+
+                    // diffuse component
+                    double diff_intensity = std::max(0.0, dot(N, L_dir));
+                    I_d = Kd * L * Od * diff_intensity;
+            
+                    // specular component
+                    vec3 R = reflect(-L_dir, N);
+                    double spec_intensity = pow(std::max(0.0, dot(R, V)), Kgls);
+                    I_s = Ks * L * Os * spec_intensity;
+                
                 }
-                // diffuse component
-                double diff_intensity = std::max(0.0, dot(N, L_dir));
-                color I_d = Kd * L * Od * diff_intensity;
-        
-                // specular component
-                vec3 R = reflect(-L_dir, N);
-                double spec_intensity = pow(std::max(0.0, dot(R, V)), Kgls);
-                color I_s = Ks * L * Os * spec_intensity;
+
+
+
+                color reflected_color = color(0,0,0);
+                if(refl > 0){
+                    vec3 reflect_dir = reflect(r.direction(), N); 
+                    ray reflected_ray(rec.p + 0.001 * reflect_dir, reflect_dir);
+                    reflected_color = refl * ray_color(reflected_ray, world, L_dir, depth - 1);
+
+                }
+                
         
                 // final color = ambient + diffuse + specular
-                return I_a + I_d + I_s;
+                return I_a + I_d + I_s + reflected_color;
             }
         
             // background color
 
-            // special sky gradiant that looks nice 
-            // vec3 unit_direction = unit_vector(r.direction());
-            // auto a = 0.5 * (unit_direction.y() + 1.0);
-            // return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
+            //special sky gradiant that looks nice 
+            vec3 unit_direction = unit_vector(r.direction());
+            auto a = 0.5 * (unit_direction.y() + 1.0);
+            return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
 
             //testcase grey
-            return color(0.2, 0.2, 0.2);
+            //return color(0.2, 0.2, 0.2);
         }
         
         

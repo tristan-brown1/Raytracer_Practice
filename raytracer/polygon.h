@@ -15,15 +15,13 @@ class polygon : public hittable {
         double D;
 
 
+        polygon(const std::vector<point3>& verts, std::shared_ptr<material> m): vertices(verts), mat(m) {
 
-        polygon(const std::vector<point3>& verts, std::shared_ptr<material> m)
-            : vertices(verts), mat(m) {
-
-                vec3 edge1 = vertices[1] - vertices[0];
-                vec3 edge2 = vertices[2] - vertices[0];
-                normal = unit_vector(cross(edge1, edge2));
-                D = dot(normal, vertices[0]);
-            }
+            vec3 edge1 = vertices[1] - vertices[0];
+            vec3 edge2 = vertices[2] - vertices[0];
+            normal = unit_vector(cross(edge1, edge2));
+            D = dot(normal, vertices[0]);
+        }
 
         bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
             double denominator = dot(normal, r.direction());
@@ -54,7 +52,7 @@ class polygon : public hittable {
 
     private:
         bool is_inside(const point3 P) const{
-            int n = vertices.size();
+            size_t n = vertices.size();
             double total_angle = 0.0;
 
             for (int i = 0; i < n; i++){
@@ -65,10 +63,6 @@ class polygon : public hittable {
             }
             return fabs(total_angle - 2 * pi ) < 1e-4;
         }
-
-
-
-
 
 };
 
